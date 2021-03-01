@@ -1,9 +1,9 @@
 (ns arrival-test-task.views
   (:require
     [re-frame.core :as re-frame]
+    [clojure.string :as str]
     [arrival-test-task.subs :as subs]
-    [arrival-test-task.events :as events]
-    [clojure.string :as str]))
+    [arrival-test-task.events :as events]))
 
 
 (defonce ^:private fields
@@ -19,26 +19,28 @@
    [:th "date"]])
 
 (defn table-row
-  [{:keys [temp-id header description applicant performer date]}]
-  [:tr.row
-   [:td temp-id]
-   [:td header]
-   [:td description]
-   [:td applicant]
-   [:td performer]
-   [:td date]])
+  [r]
+  (let [{:keys [db/id]
+         :req/keys [header description applicant performer date]} r]
+    [:tr.row
+     [:td id]
+     [:td header]
+     [:td description]
+     [:td applicant]
+     [:td performer]
+     [:td date]]))
 
 
 (defn requests-list []
-  (let [_ (re-frame/dispatch [::events/get-requests-list])
+  (let [_             (re-frame/dispatch [::events/get-requests-list])
         requests-list (re-frame/subscribe [::subs/requests-list])
-        loading? (re-frame/subscribe [::subs/loading?])]
+        loading?      (re-frame/subscribe [::subs/loading?])]
     (fn []
       (if @loading?
         [:div "Loading requests list..."]
-        [:table {:width "100%"
-                 :style {:border-collapse :collapse}
-                 :border 2
+        [:table {:width       "100%"
+                 :style       {:border-collapse :collapse}
+                 :border      2
                  :cellPadding 7}
          [:thead {:align "left"} [table-header]]
          [:tbody {:align "left"}

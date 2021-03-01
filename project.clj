@@ -12,7 +12,10 @@
                  [yogthos/config "1.1.7"]
                  [ring "1.8.2"]
                  [ring/ring-json "0.5.0"]
-                 [ring-cors "0.1.13"]]
+                 [ring-cors "0.1.13"]
+                 [com.stuartsierra/component "1.0.0"]
+                 [com.datomic/datomic-free "0.9.5697"
+                  :exclusions [com.google.guava/guava]]]
 
   :plugins [[lein-shadow "0.3.1"]
             
@@ -77,9 +80,9 @@
    
    :uberjar {:source-paths ["env/prod/clj"]
              :omit-source  true
-             :main         arrival-test-task.server
-             :aot          [arrival-test-task.server]
-             :uberjar-name "arrival-test-task.jar"
+             :main         arrival-test-task.core
+             :aot          [arrival-test-task.core]
+             :uberjar-name "testapp.jar"
              :prep-tasks   ["compile" ["release"]]}}
 
   :prep-tasks [])
