@@ -39,7 +39,7 @@
   ::get-requests-list
   (fn [{db :db} _]
     {:http-xhrio {:method :get
-                  :uri "http://localhost:8087/datomic-list"
+                  :uri "http://localhost:8080/testapp"
                   :format (ajax/json-request-format)
                   :response-format (ajax/json-response-format {:keywords? true})
                   :on-success [::process-all-response]
@@ -52,7 +52,7 @@
    (re-frame/inject-cofx ::cofx/temp-id)]
   (fn [{:keys [db temp-id now]} [_ form-data]]
     {:http-xhrio {:method :post
-                  :uri "http://localhost:8087/datomic-create"
+                  :uri "http://localhost:8080/testapp"
                   :params (assoc form-data :temp-id temp-id :date now)
                   :format (ajax/json-request-format)
                   :response-format (ajax/json-response-format {:keywords? true})

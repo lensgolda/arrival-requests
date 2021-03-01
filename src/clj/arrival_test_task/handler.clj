@@ -11,9 +11,9 @@
    [datomic.api :as d]
    [arrival-test-task.db.datomic :as db]))
 
-
-(defonce in-memory-db (atom {:items []}))
-(defonce serial-id (atom 0))
+;; in-memory DB
+;(defonce in-memory-db (atom {:items []}))
+;(defonce serial-id (atom 0))
 
 (defn- routes
   [{{<db> :datasource} :db}]
@@ -22,21 +22,21 @@
     (GET "/" _ (r/resource-response "index.html" {:root "public"}))
 
     ;; in memory storage
-    (GET "/list" _
-      (r/response @in-memory-db))
-    (POST "/list" request
-      (let [response (as-> (:body request) $r
-                       (assoc $r :id (swap! serial-id inc))
-                       (swap! in-memory-db update :items conj $r))]
-        (r/response response)))
+    ;(GET "/list" _
+    ;  (r/response @in-memory-db))
+    ;(POST "/list" request
+    ;  (let [response (as-> (:body request) $r
+    ;                   (assoc $r :id (swap! serial-id inc))
+    ;                   (swap! in-memory-db update :items conj $r))]
+    ;    (r/response response)))
 
     ;; datomic storage / list requests endpoint
-    (GET "/datomic-list" _
+    (GET "/testapp" _
       (let [data (d/q db/all-req-query (d/db <db>))]
         (r/response {:items (flatten data)})))
 
     ;; datomic storage / create request endpoint
-    (POST "/datomic-create" {body :body :as request}
+    (POST "/testapp" {body :body}
       (let [{:keys [header description applicant performer date]} body
             tx-data [{:req/header header
                       :req/description description
@@ -58,7 +58,7 @@
       wrap-json-response
       (wrap-cors
         :access-control-allow-origin #"http://localhost:8280"
-        :access-control-allow-headers [#_"Accept" "Content-Type" #_"User-Agent" #_"Cache-Control"]
+        :access-control-allow-headers ["Content-Type"]
         :access-control-allow-methods [:get :post :put :delete :options])))
 
 (defrecord Router [handler-fn]

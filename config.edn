@@ -1,0 +1,2 @@
+{:jetty {:port 8080 :join? false}
+ :datomic {:uri "datomic:free://localhost:4334/testdb?password=datomic"}}
